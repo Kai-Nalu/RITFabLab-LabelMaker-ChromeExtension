@@ -2,7 +2,7 @@
 
 chrome.action.onClicked.addListener((tab) => {
     const currentURL = tab.url;
-    const currentURLConstruct = URL(currentURL);
+    const currentURLConstruct = new URL(currentURL);
 
     const url_host = currentURLConstruct.host;
 
