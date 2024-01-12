@@ -24,21 +24,59 @@ chrome.action.onClicked.addListener((tab) => {
 
         printRequest(ticketKey, source);
     } else {
-        errorAlert();
+        displayError('invalidSite');
     }
 });
 
-function errorAlert() {
-    alert('Must be in a Jira or DeskPro issue!');
+function printRequest(ticketKey, source) {
+    //get raspberry pi ip address and port from options
+    chrome.storage.sync.get(
+        { address: '', port: '' },
+        (items) => {
+            if (optionsValid(items)) {
+                displayError('invalidOptions');
+            } else {
+                //make request url
+                const requestUrl = new URL(`http://${items.address}:${items.port}/print`);
+                //make query
+                requestUrl.searchParams.set('key', encodeURIComponent(ticketKey));
+                requestUrl.searchParams.set('source', encodeURIComponent(source));
+                //open a get request with fetch
+                fetch(requestUrl, {
+                    signal: AbortSignal.timeout(8000)
+                }).then((response) => {
+                    if (response.ok) {
+                        console.log('request sent');
+                    } else {
+                        displayError('failedRequest');
+                    }
+                }).catch((error) => {
+                    if (error.name === "AbortError") {
+                        displayError('timeoutRequest');
+                    }
+                });
+            }
+        }
+    );
 }
 
-function printRequest(ticketKey, source) {
-    //make request url
-    const requestUrl = new URL(`http://129.21.235.201:2194/print`);
-    //make query
-    requestUrl.searchParams.set('key', encodeURIComponent(ticketKey));
-    requestUrl.searchParams.set('source', encodeURIComponent(source));
-    //open a get request with fetch
-    fetch(requestUrl);
-    console.log('request sent');
+function displayError(type) {
+    message = {
+        'invalidSite': "Must be in a Jira or DeskPro issue!",
+        'invalidOptions': "Raspberry Pi IP Address or Port not specified. Specify in extenstion options.",
+        'failedRequest': "Request failed. Check Raspberry Pi IP Address and Port settings or check Raspberry Pi.",
+        'timeoutRequest': "Request timeout. Check Raspberry Pi IP Address and Port settings or check Raspberry Pi."
+    };
+
+    chrome.notifications.create({
+        type: 'basic',
+        iconUrl: 'labelIcon.png',
+        title: 'Label Maker Error',
+        message: message[type] || '...',
+        priority: 2
+    });
+}
+
+function optionsValid(items) {
+    return typeof items.address === 'undefined' || typeof items.port === 'undefined' || items.address === '' || items.port === '';
 }
