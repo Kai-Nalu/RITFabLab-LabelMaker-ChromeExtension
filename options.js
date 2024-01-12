@@ -54,3 +54,35 @@ const checkConnection = () => {
 }
 
 document.getElementById('check-connection').addEventListener('click', checkConnection);
+
+const sendDeskproApiKey = () => {
+	const deskpro_api_key = document.getElementById('deskpro-api-key').value;
+	const deskpro_api_key_status = document.getElementById('send-deskpro-api-key-status');
+	deskpro_api_key_status.textContent = 'Sending...';
+	chrome.storage.sync.get(
+        { address: '', port: '' },
+        (items) => {
+            //make request url
+            const requestUrl = new URL(`http://${items.address}:${items.port}/update-api-key`);
+            //make query
+            requestUrl.searchParams.set('key', encodeURIComponent(deskpro_api_key));
+            requestUrl.searchParams.set('type', encodeURIComponent("deskpro"));
+            //open a get request with fetch
+            fetch(requestUrl, {
+                signal: AbortSignal.timeout(8000)
+            }).then((response) => {
+                if (response.ok) {
+                    deskpro_api_key_status.textContent = 'Success!';
+                } else {
+                	deskpro_api_key_status.textContent = `Failed: ${response.status} | ${response.statusText}`;
+                }
+            }).catch((error) => {
+                if (error.name === "AbortError") {
+                    deskpro_api_key_status.textContent = 'Failed: timeout';
+                }
+            });
+        }
+    );
+}
+
+document.getElementById('send-deskpro-api-key').addEventListener('click', sendDeskproApiKey);
