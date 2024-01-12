@@ -4,19 +4,43 @@
 		<title>RIT FabLab Label Maker Options</title>
 	</head>
 	<body>
-		<label for="address">Raspberry Pi IP Address</label>
-		<input type="text" id="address" name="address">
+		<fieldset>
+			<legend>Extension Settings</legend>
+
+			<label for="address">Raspberry Pi IP Address: </label>
+			<input type="text" id="address" name="address">
+
+			<br><br>
+
+			<label for="port">Server Port Number: </label>
+			<input type="text" id="port" name="port">
+
+			<br><br>
+
+			<div id="status"></div>
+			<button id="save">Save</button>
+		</fieldset>
 
 		<br><br>
 
-		<label for="port">Server Port Number</label>
-		<input type="text" id="port" name="port">
+		<fieldset>
+			<legend>Raspberry Pi Utilities</legend>
 
-		<br><br>
+			<button id="check-connection">Check Connection</button>
+			<span id="connection-status">Unknown</span>
 
-		<div id="status"></div>
-		<button id="save">Save</button>
+			<br><br>
+
+			<label for="deskpro-api-key">Update Deskpro API key:</label>
+			<input type="text" id="deskpro-api-key" name="deskpro-api-key">
+			<button id="send-deskpro-api-key">Send New Key to Pi</button>
+		</fieldset>
 
 		<script src="options.js"></script>
+		<style>
+			fieldset {
+				padding: 10px;
+			}
+		</style>
 	</body>
 </html>
