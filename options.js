@@ -47,6 +47,8 @@ const checkConnection = () => {
             }).catch((error) => {
                 if (error.name === "AbortError") {
                     connection_status.textContent = 'Failed: timeout';
+                } else {
+                	connection_status.textContent = `Failed: ${error.name}`;
                 }
             });
         }

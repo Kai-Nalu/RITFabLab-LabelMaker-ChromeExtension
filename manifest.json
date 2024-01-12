@@ -1,7 +1,7 @@
 {
   "name": "RIT FabLab Label Maker",
   "description": "Chrome extension for printing ticket labels to the Dymo printers in the RIT FabLab.",
-  "version": "5.15",
+  "version": "5.16",
   "manifest_version": 3,
   "action": {
     "default_title": "Print Ticket",

@@ -33,7 +33,7 @@ function printRequest(ticketKey, source) {
     chrome.storage.sync.get(
         { address: '', port: '' },
         (items) => {
-            if (optionsValid(items)) {
+            if (optionsInvalid(items)) {
                 displayError('invalidOptions');
             } else {
                 //make request url
@@ -53,6 +53,9 @@ function printRequest(ticketKey, source) {
                 }).catch((error) => {
                     if (error.name === "AbortError") {
                         displayError('timeoutRequest');
+                    } else {
+                        console.log(error.name);
+                        displayError('failedRequest');
                     }
                 });
             }
@@ -77,6 +80,6 @@ function displayError(type) {
     });
 }
 
-function optionsValid(items) {
+function optionsInvalid(items) {
     return typeof items.address === 'undefined' || typeof items.port === 'undefined' || items.address === '' || items.port === '';
 }
