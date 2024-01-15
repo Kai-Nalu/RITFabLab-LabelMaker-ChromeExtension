@@ -1,8 +1,11 @@
 {
   "name": "RIT FabLab Label Maker",
-  "description": "Chrome extension for printing ticket labels to the Dymo printers in the RIT FabLab.",
-  "version": "5.16",
+  "description": "Chrome extension for printing ticket labels to the Dymo printers in the RIT FabLab. Icon from thenounproject.com/hrsaxa.",
+  "version": "5.17",
   "manifest_version": 3,
+  "icons": {
+    "128": "labelIcon.png"
+  }
   "action": {
     "default_title": "Print Ticket",
     "default_icon": "labelIcon.png",
